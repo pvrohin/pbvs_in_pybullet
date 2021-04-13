@@ -23,11 +23,11 @@ def pix_to_ee_frame(x_pix,y_pix,d):
 
 	#pixel to cam frame
 	Zc = d
-	Xc = (x_pix - (width/2))*(d/(f_x))    
+	Xc = (x_pix - (width/2))*(d/(f_x))
 	Yc = (y_pix - (height/2))*(d/(f_y))
 
 	#cam to ee frame
-	Xe = Zc 
+	Xe = Zc
 	Ye = -Xc
 	Ze = -Yc
 	return(Xe,Ye,Ze)
@@ -81,8 +81,13 @@ p.loadURDF("plane.urdf", [0, 0, -0.3])
 cubeStartPos = [0,0,0]
 cubeStartOrientation = p.getQuaternionFromEuler([0,0,0])
 
+gripper = p.addUserDebugParameter('Gripper', -0.5, 0.5, 0)
 appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.3,1.0,0],useFixedBase=0)
 kukaId = p.loadURDF("ur_description/urdf/ur10_robot.urdf",[-0.5,0.5,-0.1], cubeStartOrientation)
+number_of_joints = p.getNumJoints(kukaId)
+for joint_number in range(number_of_joints):
+    info = p.getJointInfo(kukaId, joint_number)
+    print(info[0], ": ", info[1])
 roboId = kukaId
 required_joints = [0,-1.9,1.9,-1.57,-1.57,0,0]
 for i in range(1,7):
@@ -93,6 +98,8 @@ p.resetDebugVisualizerCamera( cameraDistance=2.2, cameraYaw=140, cameraPitch=-60
 
 
 for i in range (10000):
+    user_input = p.readUserDebugParameter(gripper)
+    p.setJointMotorControl2(kukaId,10,p.POSITION_CONTROL,targetPosition=user_input)
     p.stepSimulation()
     time.sleep(1./240.)
     I,Dbuf,Sbuf = get_image(kukaId)
@@ -114,7 +121,6 @@ for i in range (10000):
     relative_quat_cam = p.getQuaternionFromEuler(relative_rot_cam)
     pos2,ort2 = relative_ee_pose_to_ee_world_pose1(roboId,relative_pos_cam,relative_quat_cam)
     accurateIK(roboId,7,pos2,ort2,useNullSpace=False)
-    
+
 c = input('press enter to end')
 p.disconnect()
-
