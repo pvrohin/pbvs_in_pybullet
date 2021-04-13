@@ -96,7 +96,7 @@ p.loadURDF("plane.urdf", [0, 0, -0.3])
 # p.resetBasePositionAndOrientation(kukaId, [0, 0, 0], [0, 0, 0, 1])
 cubeStartPos = [0,0,0]
 cubeStartOrientation = p.getQuaternionFromEuler([0,0,0])
-boxId = p.loadURDF("table/table.urdf",cubeStartPos, cubeStartOrientation)
+#boxId = p.loadURDF("table/table.urdf",cubeStartPos, cubeStartOrientation)
 # appleId = p.loadURDF("apple.urdf",[0.0,0.0,0.625])
 appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.0,0.2,0.7],useFixedBase=0)
 kukaId = p.loadURDF("ur_description/urdf/ur10_robot.urdf",[-0.6,0,0.625], cubeStartOrientation)
