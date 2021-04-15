@@ -82,8 +82,9 @@ cubeStartPos = [0,0,0]
 cubeStartOrientation = p.getQuaternionFromEuler([0,0,0])
 
 gripper = p.addUserDebugParameter('Gripper', -0.5, 0.5, 0)
-appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.3,1.0,0],useFixedBase=0)
-kukaId = p.loadURDF("ur_description/urdf/ur10_robot.urdf",[-0.5,0.5,-0.1], cubeStartOrientation)
+appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.3,1.0,-0.2],useFixedBase=0)
+kukaId = p.loadURDF("ur_description/urdf/ur10_robot.urdf",[-0.5,0.5,0.15], cubeStartOrientation)
+baseId = p.loadURDF("ur_description/urdf/mobile_base_without_arm.urdf",[-0.6,0.5,0.0], cubeStartOrientation)
 number_of_joints = p.getNumJoints(kukaId)
 for joint_number in range(number_of_joints):
     info = p.getJointInfo(kukaId, joint_number)
