@@ -81,7 +81,8 @@ p.loadURDF("plane.urdf", [0, 0, -0.3])
 cubeStartPos = [0,0,0]
 cubeStartOrientation = p.getQuaternionFromEuler([0,0,0])
 
-gripper = p.addUserDebugParameter('Gripper', -0.5, 0.5, 0)
+gripper_left = p.addUserDebugParameter('Gripper_left', -0.5, 0.5, 0)
+gripper_right = p.addUserDebugParameter('Gripper_right', -0.5, 0.5, 0)
 appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.3,1.0,-0.2],useFixedBase=0)
 kukaId = p.loadURDF("ur_description/urdf/arm_with_gripper.urdf",[-0.5,0.5,0.15], cubeStartOrientation)
 baseId = p.loadURDF("ur_description/urdf/mobile_base_without_arm.urdf",[-0.6,0.5,0.0], cubeStartOrientation)
@@ -99,8 +100,10 @@ p.resetDebugVisualizerCamera( cameraDistance=2.2, cameraYaw=140, cameraPitch=-60
 
 
 for i in range (10000):
-    user_input = p.readUserDebugParameter(gripper)
-    p.setJointMotorControl2(kukaId,10,p.POSITION_CONTROL,targetPosition=user_input)
+    user_input_left = p.readUserDebugParameter(gripper_left)
+    user_input_right = p.readUserDebugParameter(gripper_right)
+    p.setJointMotorControl2(kukaId,14,p.POSITION_CONTROL,targetPosition=user_input_left)
+    p.setJointMotorControl2(kukaId,16,p.POSITION_CONTROL,targetPosition=user_input_right)
     p.stepSimulation()
     time.sleep(1./240.)
     I,Dbuf,Sbuf = get_image(kukaId)
