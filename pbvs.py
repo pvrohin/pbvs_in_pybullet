@@ -83,13 +83,26 @@ cubeStartOrientation = p.getQuaternionFromEuler([0,0,0])
 
 gripper_left = p.addUserDebugParameter('Gripper_left', -0.5, 0.5, 0)
 gripper_right = p.addUserDebugParameter('Gripper_right', -0.5, 0.5, 0)
+
+front_left = p.addUserDebugParameter('front_left', 0, 20, 0)
+front_right = p.addUserDebugParameter('front_right', 0, 20, 0)
+rear_left = p.addUserDebugParameter('rear_left', 0, 20, 0)
+rear_right = p.addUserDebugParameter('rear_right', 0, 20, 0)
+
 appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.3,1.0,-0.2],useFixedBase=0)
-kukaId = p.loadURDF("ur_description/urdf/arm_with_gripper.urdf",[-0.5,0.5,0.15], cubeStartOrientation)
-baseId = p.loadURDF("ur_description/urdf/mobile_base_without_arm.urdf",[-0.6,0.5,0.0], cubeStartOrientation)
+kukaId = p.loadURDF("ur_description/urdf/arm_with_gripper.urdf",[-0.5,0.5,0.05], cubeStartOrientation)
+baseId = p.loadURDF("ur_description/urdf/mobile_base_without_arm.urdf",[-0.6,0.5,-0.1], cubeStartOrientation)
+
 number_of_joints = p.getNumJoints(kukaId)
 for joint_number in range(number_of_joints):
     info = p.getJointInfo(kukaId, joint_number)
     print(info[0], ": ", info[1])
+
+number_of_joints = p.getNumJoints(baseId)
+for joint_number in range(number_of_joints):
+    info = p.getJointInfo(baseId, joint_number)
+    print(info[0], ": ", info[1])
+
 roboId = kukaId
 required_joints = [0,-1.9,1.9,-1.57,-1.57,0,0]
 for i in range(1,7):
@@ -102,8 +115,21 @@ p.resetDebugVisualizerCamera( cameraDistance=2.2, cameraYaw=140, cameraPitch=-60
 for i in range (10000):
     user_input_left = p.readUserDebugParameter(gripper_left)
     user_input_right = p.readUserDebugParameter(gripper_right)
+
+    wheel_front_left = p.readUserDebugParameter(front_left)
+    wheel_front_right = p.readUserDebugParameter(front_right)
+    wheel_back_left = p.readUserDebugParameter(rear_left)
+    wheel_back_right = p.readUserDebugParameter(rear_right)
+
     p.setJointMotorControl2(kukaId,14,p.POSITION_CONTROL,targetPosition=user_input_left)
     p.setJointMotorControl2(kukaId,16,p.POSITION_CONTROL,targetPosition=user_input_right)
+
+    #p.setJointMotorControl2(baseId,0,p.VELOCITY_CONTROL,targetVelocity=20,force=500)
+    p.setJointMotorControl2(baseId,1,p.VELOCITY_CONTROL,targetVelocity=wheel_front_left,force=500)
+    p.setJointMotorControl2(baseId,2,p.VELOCITY_CONTROL,targetVelocity=wheel_front_right,force=500)
+    p.setJointMotorControl2(baseId,3,p.VELOCITY_CONTROL,targetVelocity=wheel_back_left,force=500)
+    p.setJointMotorControl2(baseId,4,p.VELOCITY_CONTROL,targetVelocity=wheel_back_right,force=500)
+
     p.stepSimulation()
     time.sleep(1./240.)
     I,Dbuf,Sbuf = get_image(kukaId)
