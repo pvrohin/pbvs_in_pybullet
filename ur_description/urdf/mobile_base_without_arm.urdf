@@ -424,7 +424,54 @@
     
   </gazebo> -->
 
+<!--######################################################################-->
+<transmission name="front_left_wheel_trans" type="SimpleTransmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <actuator name="front_left_wheel_motor">
+   <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+   <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+  <joint name="front_left_wheel_joint">
+   <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+  </joint>
+</transmission>
 
+<transmission name="front_right_wheel_trans" type="SimpleTransmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <actuator name="front_right_wheel_motor">
+   <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+   <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+  <joint name="front_right_wheel_joint">
+   <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+  </joint>
+</transmission>
+
+<transmission name="rear_left_wheel_trans" type="SimpleTransmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <actuator name="rear_left_wheel_motor">
+   <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+   <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+  <joint name="rear_left_wheel_joint">
+   <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+  </joint>
+</transmission>
+
+<transmission name="rear_right_wheel_trans" type="SimpleTransmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <actuator name="rear_right_wheel_motor">
+   <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+   <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+  <joint name="rear_right_wheel_joint">
+   <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+  </joint>
+</transmission>
+
+
+
+<!--######################################################################-->
 
   <link name="world"/>
   <joint name="world_joint" type="fixed">
