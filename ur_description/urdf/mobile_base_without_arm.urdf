@@ -255,8 +255,7 @@
       <child link="base_footprint" />
     </joint>-->
   <!-- mobile base -->
-
-  <!-- position controller -->
+ <!-- position controller -->
   <gazebo reference="front_right_wheel">
     <mu1>0.7</mu1>
     <mu2>0.7</mu2>
@@ -277,8 +276,8 @@
     <mu2>0.7</mu2>
     <material>Gazebo/Black</material>
   </gazebo>
-
- <!-- <gazebo reference="base_hokuyo_link">
+<!--
+  <gazebo reference="base_hokuyo_link">
     <sensor name="base_hokuyo" type="ray">
       <always_on>true</always_on>
       <update_rate>50</update_rate>
@@ -307,7 +306,7 @@
         <frameName>/base_hokuyo_link</frameName>
       </plugin>
     </sensor>
-  </gazebo>
+  </gazebo>-->
   <gazebo>
     <plugin filename="libgazebo_ros_planar_move.so" name="base_controller">
       <commandTopic>cmd_vel</commandTopic>
@@ -316,7 +315,7 @@
       <odometryRate>10.0</odometryRate>
       <robotBaseFrame>base_link</robotBaseFrame>
     </plugin>
-  </gazebo>-->
+  </gazebo>
 
  <!-- <joint name="base_link_2_base_hokuyo_link" type="fixed">
     <parent link="base_link"/>
@@ -345,9 +344,8 @@
   </link> -->
 
  
+ 
 
-   
-<!--
   <link name="xtion1_frame">
     <inertial>
       <mass value="1e-5"/>
@@ -368,17 +366,8 @@
     </collision>
   </link>
 
-  <joint name="arm_tool0_2_xtion1_frame" type="fixed">
-    <parent link="arm_tool0"/>
-    <child link="xtion1_frame"/>
-    <origin rpy="0 -1.5707963 0 " xyz="-0.05 0 0.0"/>
-  </joint>
-  <joint name="xtion1_frame_2_xtion1_optical_frame" type="fixed">
-    <parent link="xtion1_frame"/>
-    <child link="xtion1_optical_frame"/>
-    <origin rpy="-1.5707963 0 -1.5707963" xyz="0 0 0"/>
-  </joint>
 
+ <!--
   <link name="xtion1_optical_frame"/>
   <gazebo reference="xtion1_frame">
     <sensor name="xtion1_frame_sensor" type="depth">
@@ -422,8 +411,15 @@
       </plugin>
     </sensor>
     
-  </gazebo> -->
+  </gazebo> 
 
+
+ <joint name="xtion1_frame_2_xtion1_optical_frame" type="fixed">
+    <parent link="xtion1_frame"/>
+    <child link="xtion1_optical_frame"/>
+    <origin rpy="-1.5707963 0 -1.5707963" xyz="0 1 0"/>
+  </joint>
+-->
 <!--######################################################################-->
 <transmission name="front_left_wheel_trans" type="SimpleTransmission">
   <type>transmission_interface/SimpleTransmission</type>
@@ -472,7 +468,11 @@
 
 
 <!--######################################################################-->
-
+  <joint name="base_link_2_xtion1_frame" type="fixed">
+    <parent link="base_link"/>
+    <child link="xtion1_frame"/>
+    <origin rpy="0 0 0 " xyz="0.32 0 0.1"/>
+  </joint>  
   <link name="world"/>
   <joint name="world_joint" type="fixed">
     <parent link="world"/>
@@ -483,4 +483,5 @@
 
 
 </robot>
+
 
