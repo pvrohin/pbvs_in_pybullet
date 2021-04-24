@@ -179,10 +179,6 @@ ang = 0
 ang = 0
 
 wheels = [1,2, 3, 4]
-#(2, b'front_left_wheel', 0, 7, 6, 1, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, b'front_left_wheel_link')
-#(3, b'front_right_wheel', 0, 8, 7, 1, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, b'front_right_wheel_link')
-#(4, b'rear_left_wheel', 0, 9, 8, 1, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, b'rear_left_wheel_link')
-#(5, b'rear_right_wheel', 0, 10, 9, 1, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, b'rear_right_wheel_link')
 wheelVelocities = [0, 0, 0, 0]
 wheelDeltasTurn = [1, -1, 1, -1]
 wheelDeltasFwd = [1, 1, 1, 1]
