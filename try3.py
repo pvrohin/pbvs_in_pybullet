@@ -158,7 +158,7 @@ jd = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,0,0,0,0,0,0,0,0,0,0]
 for i in range(numJoints):
   p.resetJointState(kukaId, i, rp[i])
 
-p.setGravity(0, 0, -10)
+
 t = 0.
 prevPose = [0, 0, 0]
 prevPose1 = [0, 0, 0]
