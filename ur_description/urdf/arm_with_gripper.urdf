@@ -627,7 +627,7 @@
     </actuator>
   </transmission>
 
-
+<!--
   <link name="world"/>
   <joint name="world_joint" type="fixed">
     <parent link="world"/>
@@ -635,6 +635,6 @@
     <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.1"/>
   </joint>
 
-
+-->
 
 </robot>
