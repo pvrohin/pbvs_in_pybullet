@@ -13,6 +13,16 @@ from sphere_fitting import sphereFit
 from cam_ik import accurateIK
 
 
+clid = p.connect(p.SHARED_MEMORY)
+if (clid < 0):
+	p.connect(p.GUI)
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+p.setPhysicsEngineParameter(enableConeFriction=0)
+
+time_step = 0.001
+
+
+
 fov = 50
 aspect = 1
 near = 0.01
@@ -71,18 +81,13 @@ def relative_ee_pose_to_ee_world_pose1(robotId,eeTargetPos,eeTargetOrn):
     return p.multiplyTransforms(ee_pos_W,ee_ort_W,eeTargetPos,eeTargetOrn)
 
 
-clid = p.connect(p.SHARED_MEMORY)
-if (clid < 0):
-	p.connect(p.GUI)
-p.setAdditionalSearchPath(pybullet_data.getDataPath())
-
-time_step = 0.001
-gravity_constant = -9.81
 p.resetSimulation()
-p.setTimeStep(time_step)
-p.setGravity(0.0, 0.0, gravity_constant)
 
-p.loadURDF("plane.urdf", [0, 0, -0.20])
+p.setTimeStep(time_step)
+p.setGravity(0.0, 0.0, -9.81)
+
+cubeStartOrientation = p.getQuaternionFromEuler([0,0,0])
+p.loadURDF("plane.urdf", [0, 0, 0.0])
 
 
 gripper_left = p.addUserDebugParameter('Gripper_left', -0.5, 0.5, 0)
@@ -90,39 +95,44 @@ gripper_right = p.addUserDebugParameter('Gripper_right', -0.5, 0.5, 0)
 targetVelocitySlider = p.addUserDebugParameter("wheelVelocity",-50,50,0)
 maxForceSlider = p.addUserDebugParameter("maxForce",0,50,20)
 steeringSlider = p.addUserDebugParameter("steering",-1,1,0)
-#front_left = p.addUserDebugParameter('front_left', 0, 20, 0)
-#front_right = p.addUserDebugParameter('front_right', 0, 20, 0)
-#rear_left = p.addUserDebugParameter('rear_left', 0, 20, 0)
-#rear_right = p.addUserDebugParameter('rear_right', 0, 20, 0)
+front_left = p.addUserDebugParameter('front_left', 0, 20, 0)
+front_right = p.addUserDebugParameter('front_right', 0, 20, 0)
+rear_left = p.addUserDebugParameter('rear_left', 0, 20, 0)
+rear_right = p.addUserDebugParameter('rear_right', 0, 20, 0)
 appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.3,1.0,0.0],useFixedBase=True)
+appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.5,0.50,0.0],useFixedBase=True)
+appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.5,-1.0,0.0],useFixedBase=True)
+appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.5,-2.0,0.0],useFixedBase=True)
+appleId = p.loadURDF("urdf/apple1/apple.urdf",[0.0,1.0,1],useFixedBase=False)
 
 
 #importing kuka arm at
-kukaCenter = [0,0,0.14023]
+kukaCenter = [0,0,0.30250]
 kukaOrientation = p.getQuaternionFromEuler([0,0,0])
-scale = 0.9
-kukaId = p.loadURDF("ur_description/urdf/arm_with_gripper.urdf", kukaCenter, kukaOrientation, globalScaling= scale)
+scale = 0.7
+kukaId = p.loadURDF("ur_description/urdf/arm_with_gripper.urdf", kukaCenter, kukaOrientation, globalScaling= scale,useFixedBase=False)
+
 number_of_joints = p.getNumJoints(kukaId)
 for joint_number in range(number_of_joints):
     info = p.getJointInfo(kukaId, joint_number)
     print(info[0], ": ", info[1])
 
-# impoting the base at 
-baseCenter = [0.0,0.0,0.0]
+# importing the base at 
+baseCenter = [0.0,0.0,0.25]
 baseOrientation = p.getQuaternionFromEuler([0,0,0])
-baseId = p.loadURDF("ur_description/urdf/mobile_base_without_arm.urdf", baseCenter, baseOrientation)
+baseId = p.loadURDF("ur_description/urdf/mobile_base_without_arm.urdf",baseCenter , cubeStartOrientation,useFixedBase=False)
 number_of_joints = p.getNumJoints(baseId)
 for joint_number in range(number_of_joints):
     info = p.getJointInfo(baseId, joint_number)
     print(info[0], ": ", info[1])
-
+"""
 # setting kuka initialy 0 
 curr_joint_value = [0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 p.setJointMotorControlArray( kukaId, range(16), p.POSITION_CONTROL, targetPositions=curr_joint_value)
-
+"""
 
 # puting kuka on baseId
-cid = p.createConstraint(baseId,-1, kukaId, -1, p.JOINT_FIXED, [0, 0, 0], [0.0, 0.0, 0.14023], [0, 0, 0])
+cid = p.createConstraint(baseId,-1, kukaId, -1, p.JOINT_FIXED, [0.0, 0.0, 0.0], [0,0,0.10], [0.0, 0.0, 0.0])
 number_of_joints = p.getNumJoints(cid)
 
 print("cid "+str(p.getNumJoints(cid)))
@@ -132,12 +142,23 @@ for joint_number in range(number_of_joints):
     info = p.getJointInfo(cid, joint_number)
     print(info[0], ": ", info[1])
 
+required_joints = [0,-1.9,1.9,-1.57,-1.57,0,0]
+for i in range(1,7):
+    p.resetJointState(bodyUniqueId=kukaId,
+                            jointIndex=i,
+                            targetValue=required_joints[i-1])
+p.resetDebugVisualizerCamera( cameraDistance=2.2, cameraYaw=140, cameraPitch=-60, cameraTargetPosition=[0,0,0])
 
 
-baseorn = p.getQuaternionFromEuler([3.1415, 0, 0.3])
-baseorn = [0, 0, 0, 1]
+# activating real time simulation
+useRealTimeSimulation = 1
+p.setRealTimeSimulation(useRealTimeSimulation)
+
+
+#baseorn = p.getQuaternionFromEuler([3.1415, 0, 0.3])
+#baseorn = [0, 0, 0, 1]
 #[0, 0, 0.707, 0.707]
-
+"""
 #p.resetBasePositionAndOrientation(kukaId,[0,0,0],baseorn)#[0,0,0,1])
 kukaEndEffectorIndex = 17
 numJoints = p.getNumJoints(kukaId)
@@ -157,12 +178,11 @@ jd = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,0,0,0,0,0,0,0,0,0,0]
 
 for i in range(numJoints):
   p.resetJointState(kukaId, i, rp[i])
-
-
+"""
 t = 0.
-prevPose = [0, 0, 0]
-prevPose1 = [0, 0, 0]
-hasPrevPose = 0
+#prevPose = [0, 0, 0]
+#prevPose1 = [0, 0, 0]
+#hasPrevPose = 0
 useNullSpace = 0
 
 useOrientation = 0
@@ -174,17 +194,20 @@ p.setRealTimeSimulation(useRealTimeSimulation)
 #trailDuration is duration (in seconds) after debug lines will be removed automatically
 #use 0 for no-removal
 trailDuration = 15
-basepos = [0, 0, 0]
-ang = 0
+#basepos = []
+#basepos[1] = baseCenter
 ang = 0
 
-wheels = [1,2, 3, 4]
+
+wheels = [0, 1, 2, 3]
 wheelVelocities = [0, 0, 0, 0]
 wheelDeltasTurn = [1, -1, 1, -1]
 wheelDeltasFwd = [1, 1, 1, 1]
 
-while 1:
-	I,Dbuf,Sbuf = get_image(kukaId)
+while (True):
+	p.stepSimulation()
+	time.sleep(1./240.)
+	"""I,Dbuf,Sbuf = get_image(kukaId)
 	sx,sy,sz = mask_points(Sbuf,Dbuf,appleId)
 	r,cx,cy,cz = sphereFit(sx,sy,sz)
 	# cx = np.array(sx).mean()
@@ -192,6 +215,9 @@ while 1:
 	# cz = np.array(sz).mean()
 	pos = np.array((cx,cy,cz))[:,0]
 	error = np.sqrt(np.mean((pos-dpos)**2))
+	if error < 0.00045:
+	      break
+
 	print(pos,error)
 
 	ort = np.array((0.0,0.0,0.0))
@@ -216,20 +242,16 @@ while 1:
 	    #closeEnough = (dist2 < threshold)
 	    #iter = iter + 1
 	  ##print ("Num iter: "+str(iter) + "threshold: "+str(dist2))
-	  #return jointPoses
+	  #return jointPoses"""
 
 
 	keys = p.getKeyboardEvents()
 	shift = 0.01
-	wheelVelocities = [0, 0, 0, 0]
-	speed = 1.0
+	speed = 0.240
 	for k in keys:
 		if ord('s') in keys:
 			p.saveWorld("state.py")
-		if ord('a') in keys:
-			basepos = basepos = [basepos[0], basepos[1] - shift, basepos[2]]
-		if ord('d') in keys:
-			basepos = basepos = [basepos[0], basepos[1] + shift, basepos[2]]
+		
 
 		if p.B3G_LEFT_ARROW in keys:
 			for i in range(len(wheels)):
@@ -247,17 +269,17 @@ while 1:
 	baseorn = p.getQuaternionFromEuler([0, 0, ang])
 	for i in range(len(wheels)):
 		p.setJointMotorControl2(baseId,wheels[i],p.VELOCITY_CONTROL,targetVelocity=wheelVelocities[i],force=1000)
-		print("wheelmove")
+		
 	#p.resetBasePositionAndOrientation(baseId,basepos,baseorn)#[0,0,0,1])
 	if (useRealTimeSimulation):
 		t = time.time()  #(dt, micro) = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f').split('.')
 		#t = (dt.second/60.)*2.*math.pi
 	else:
-		t = t + 0.001
+		t = t + 0.1
 
-	if (useSimulation and useRealTimeSimulation == 0):
+	if (useSimulation and useRealTimeSimulation != 0):
 		p.stepSimulation()
-
+"""
 #for i in range(1):
 #	#pos = [-0.4,0.2*math.cos(t),0.+0.2*math.sin(t)]
 #	pos = [0.2 * math.cos(t), 0, 0. + 0.2 * math.sin(t) + 0.7]
@@ -310,3 +332,8 @@ if (hasPrevPose):
 prevPose = pos
 prevPose1 = ls[4]
 hasPrevPose = 1
+end = time.time()
+print("total time taken : ", end-start)
+
+time.sleep(10)
+p.disconnect()"""
