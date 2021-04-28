@@ -38,7 +38,7 @@
         xyz="0.0030946 4.78250032638821E-11 0.053305"
         rpy="0 0 0" />
       <mass
-        value="47.873" />
+        value="147.873" />
       <inertia
         ixx="0.774276574699151"
         ixy="-1.03781944357671E-10"
@@ -56,7 +56,7 @@
       </geometry>
       <material
         name="LightGrey">
-          <color rgba="0.7 0.7 0.7 0.8"/>
+          <color rgba="0.7 0.7 0.7 1"/>
       </material>
     </visual>
     <collision>
@@ -82,7 +82,7 @@
         xyz="-4.1867E-18 0.0068085 -1.65658661799998E-18"
         rpy="0 0 0" />
       <mass
-        value="2.6578" />
+        value="50.6578" />
       <inertia
         ixx="0.00856502765719703"
         ixy="1.5074118157338E-19"
@@ -100,7 +100,7 @@
       </geometry>
       <material
         name="Darkgrey">
-           <color rgba="0.1 0.1 0.1 0.8"/>
+           <color rgba="0.1 0.1 0.1 01"/>
       </material>
     </visual>
     <collision>
@@ -117,7 +117,7 @@
     <contact>
       <lateral_friction value="1.0"/>
       <rolling_friction value="0.0"/>
-      <stiffness value="30000"/>
+     <stiffness value="30000"/>
       <damping value="1000"/>
     </contact>
     
@@ -126,7 +126,7 @@
         xyz="-4.1867E-18 0.0068085 -1.65658661799998E-18"
         rpy="0 0 0" />
       <mass
-        value="2.6578" />
+        value="50.6578" />
       <inertia
         ixx="0.00856502765719703"
         ixy="1.5074118157338E-19"
@@ -144,7 +144,7 @@
       </geometry>
       <material
         name="Darkgrey">
-          <color rgba="0.1 0.1 0.1 0.8"/>
+          <color rgba="0.1 0.1 0.1 1"/>
       </material>
     </visual>
     <collision>
@@ -170,7 +170,7 @@
         xyz="-4.1867E-18 0.0068085 -1.65658661799998E-18"
         rpy="0 0 0" />
       <mass
-        value="2.6578" />
+        value="50.6578" />
       <inertia
         ixx="0.00856502765719703"
         ixy="1.5074118157338E-19"
@@ -188,7 +188,7 @@
       </geometry>
       <material
         name="Darkgrey">
-      <color rgba="0.1 0.1 0.1 0.8"/>
+      <color rgba="0.1 0.1 0.1 1"/>
       </material>
     </visual>
     <collision>
@@ -213,7 +213,7 @@
         xyz="-4.1867E-18 0.0068085 -1.65658661799998E-18"
         rpy="0 0 0" />
       <mass
-        value="2.6578" />
+        value="50.6578" />
       <inertia
         ixx="0.00856502765719703"
         ixy="1.5074118157338E-19"
@@ -231,7 +231,7 @@
       </geometry>
       <material
         name="Darkgrey">
-       <color rgba="0.1 0.1 0.1 0.80"/>
+       <color rgba="0.1 0.1 0.1 1"/>
       </material>
     </visual>
     <collision>
@@ -273,13 +273,13 @@
     <child link ="rear_right_wheel"/>
     <origin rpy ="0 0 0" xyz= "-0.220 -0.250 0"/>
 </joint>
-
- <!--<link name="base_footprint"/>
+<!--
+ <link name="base_footprint"/>
 
     <joint name="base_footprint_joint" type="fixed">
       <origin xyz="0 0 -0.0" rpy="0 0 0" />
-      <parent link="base_link" />
-      <child link="base_footprint" />
+      <parent link="base_footprint" />
+      <child link="base_link" />
     </joint>-->
   <!-- mobile base -->
  <!-- position controller -->
@@ -456,7 +456,7 @@
     </plugin>
   </gazebo>
 <!--######################################################################-->
-<gazebo>
+<!--<gazebo>
       <plugin name="diff_drive_controller" filename="libgazebo_ros_diff_drive.so">
         <legacyMode>false</legacyMode>
         <alwaysOn>true</alwaysOn>
@@ -477,7 +477,7 @@
         <odometrySource>world</odometrySource>
         <rosDebugLevel>Debug</rosDebugLevel>
       </plugin>
-</gazebo>
+</gazebo>-->
 <!--######################################################################-->
 <gazebo reference="front_left_wheel">
  <mu1 value="1.0"/>
@@ -556,16 +556,14 @@
     <child link="xtion1_frame"/>
     <origin rpy="0 0 0 " xyz="0.32 0 0.1"/>
   </joint>  
-  <link name="world"/>
+ <!-- <link name="world"/>
   <joint name="world_joint" type="fixed">
     <parent link="world"/>
-    <child link="base_link"/>
-    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.1"/>
+    <child link="base_footprint"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
   </joint>
 
-
+-->
 
 </robot>
-
-
 
